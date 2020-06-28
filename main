@@ -1,0 +1,41 @@
+    UnityWebRequest www;
+        string[,] lines;
+     string[] lineas;
+     string[] lectura; 
+ 
+ public string url; 
+  int csv_lenght = 9; //the lenght for each line
+  IEnumerator GetInfo(){
+        using (www = UnityWebRequest.Get("url")){
+
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError||www.isHttpError){
+                //do when it's offline
+            }else{
+                    Debug.Log(www.downloadHandler.text);
+
+                // Or retrieve results as binary data
+                byte[] results = www.downloadHandler.data;
+               
+                string[] lectura = www.downloadHandler.text.Split(',');
+                 lineas =  www.downloadHandler.text.Split('\n');
+                lines = new string[lineas.Length+(csv_lenght+1),lectura.Length/lineas.Length+csv_lenght];
+             //   gen_lect = new string[lectura.Length,lineas.Length];
+                
+               for (int f = 0; f < lineas.Length; f++){
+                for (int i = 0; i < csv_lenght; i++){
+                    if (i == 0 && f == 1){
+                    
+                       lectura[i+csv_lenght*f].Replace("\"","");
+                   
+                    }
+                    
+                   lines[f,i] = lectura[i+csv_lenght*f];
+                  
+                   //you can do whatever you want with lines[,]
+               }
+               }
+            }
+
+        }
